@@ -26,6 +26,10 @@ jobs:
       - name: Instalar Dependencias
         run: npm ci
 
+      # Step 3.5: Realiza una auditoría de seguridad (OWASP Top 10 A06) sobre las dependencias
+      - name: Auditoría de Seguridad (OWASP Dependency Check)
+        run: npm audit --audit-level=high
+
       # Step 4: Compila TypeScript para validar que no haya errores sintácticos o de tipado
       - name: Construir Proyecto (Build)
         run: npm run build

@@ -237,3 +237,11 @@ Para garantizar la calidad de los datos sin requerir un motor SQL estricto, la A
 * Si intentas crear una rutina o registrar un entrenamiento para `bench-press` (tipo hipertrofia) pero colocas parámetros de cardio como `distanceKm` o `durationMinutes`, **el servidor responderá con un error HTTP 400**.
 * Si intentas registrar repeticiones/series para un ejercicio de cardio como `running` (tipo resistencia), **el servidor responderá con un error HTTP 400**.
 * Los valores de series, repeticiones, distancias y tiempos deben ser estrictamente numéricos positivos y mayores a cero (a excepción del peso en hipertrofia, que admite 0 para ejercicios que usen únicamente peso corporal).
+
+---
+
+## 🛡️ Seguridad Básica (OWASP)
+
+El proyecto implementa buenas prácticas de seguridad alineadas con el estándar **OWASP**:
+1. **Seguridad de Cabeceras HTTP (Helmet)**: La API utiliza el middleware `helmet` en [src/app.ts](file:///c:/Users/pedro.tanamachi/Documents/Proyectos/api-final-capacitacion/src/app.ts) para inyectar cabeceras seguras en las respuestas HTTP. Esto protege contra vulnerabilidades comunes como XSS (Cross-Site Scripting), Clickjacking y MIME-sniffing.
+2. **Auditoría de Vulnerabilidades en CI/CD**: Se ha integrado `npm audit --audit-level=high` como paso obligatorio en el pipeline de GitHub Actions ([ci.yml](file:///c:/Users/pedro.tanamachi/Documents/Proyectos/api-final-capacitacion/.github/workflows/ci.yml)). Si se introduce una dependencia vulnerable (OWASP A06:2021), el pipeline fallará automáticamente bloqueando el despliegue.

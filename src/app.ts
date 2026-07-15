@@ -1,11 +1,15 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 
 import exerciseRoutes from './routes/exerciseRoutes';
 import routineRoutes from './routes/routineRoutes';
 import logRoutes from './routes/logRoutes';
 
 const app = express();
+
+// Secure HTTP headers against common web vulnerabilities (OWASP Recommendation)
+app.use(helmet());
 
 // Enable CORS so client frontends can make request queries
 app.use(cors());
