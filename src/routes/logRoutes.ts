@@ -18,6 +18,60 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 /**
+ * Route handler to compute training stats.
+ * We aggregate total hypertrophy volume (sets * reps * weight) and total endurance metrics (distance/duration)
+ * so that users can verify progressive overload and cardio mileage accomplishments from a single response.
+ */
+router.get('/stats', async (req: Request, res: Response) => {
+  try {
+    const db = await DBStore.read();
+    
+    let totalHypertrophyVolume = 0;
+    let totalEnduranceDistanceKm = 0;
+    let totalEnduranceDurationMinutes = 0;
+    const totalWorkoutSessions = db.logs.length;
+    
+    const exerciseMap = new Map(db.exercises.map((e) => [e.id, e]));
+
+    for (const log of db.logs) {
+      for (const metric of log.metrics) {
+        const exercise = exerciseMap.get(metric.exerciseId);
+        if (!exercise) {
+          // Skip if the exercise type is unrecognized
+          continue;
+        }
+
+        if (exercise.type === 'hypertrophy') {
+          const strengthMetric = metric as any;
+          if (strengthMetric.sets && Array.isArray(strengthMetric.sets)) {
+            for (const set of strengthMetric.sets) {
+              totalHypertrophyVolume += (set.reps || 0) * (set.weightKg || 0);
+            }
+          }
+        } else if (exercise.type === 'endurance') {
+          const enduranceMetric = metric as any;
+          totalEnduranceDistanceKm += enduranceMetric.distanceKm || 0;
+          totalEnduranceDurationMinutes += enduranceMetric.durationMinutes || 0;
+        }
+      }
+    }
+
+    res.json({
+      totalWorkoutSessions,
+      hypertrophy: {
+        totalVolumeLiftedKg: totalHypertrophyVolume,
+      },
+      endurance: {
+        totalDistanceKm: Number(totalEnduranceDistanceKm.toFixed(2)),
+        totalDurationMinutes: Number(totalEnduranceDurationMinutes.toFixed(2)),
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: `Error al generar estadísticas de entrenamiento: ${error.message}` });
+  }
+});
+
+/**
  * Route handler to log a completed workout session.
  * Checks if the routineId exists (if provided), validates metrics, and saves the entry.
  */
