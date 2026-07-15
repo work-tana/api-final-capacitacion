@@ -1,30 +1,16 @@
-import express, { Request, Response, NextFunction } from 'express';
-import cors from 'cors';
+import app from './app';
 import dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 
-import exerciseRoutes from './routes/exerciseRoutes';
-import routineRoutes from './routes/routineRoutes';
-import logRoutes from './routes/logRoutes';
-import { DBStore } from './data/dbStore';
-
-// Load environmental variables (e.g. custom port configurations)
+// Load environment configurations
 dotenv.config();
 
-const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Enable CORS so that client-side frontends (like React/Next.js apps) can communicate with the API
-app.use(cors());
-
-// Parse incoming requests with JSON payloads (standard API body parsing)
-app.use(express.json());
-
 /**
- * Startup sanity check.
- * Verifies that db.json exists in the data directory and is seeded with standard exercises.
- * If the file is missing or corrupted, we re-initialize it to ensure the API works out-of-the-box.
+ * Startup database check.
+ * Creates the database directory and seeds db.json if missing.
  */
 const initializeDatabase = async (): Promise<void> => {
   const dataDir = path.join(__dirname, 'data');
@@ -106,39 +92,6 @@ const initializeDatabase = async (): Promise<void> => {
     console.error(`Error during database initialization: ${error.message}`);
   }
 };
-
-// Mount endpoints
-app.use('/api/exercises', exerciseRoutes);
-app.use('/api/routines', routineRoutes);
-app.use('/api/logs', logRoutes);
-
-/**
- * Root endpoint returning API metadata and availability structure.
- */
-app.get('/', (req: Request, res: Response) => {
-  res.json({
-    name: 'Sports Training API (Hypertrophy & Endurance)',
-    description: 'API sencilla para planificar rutinas y registrar entrenamientos de fuerza y cardio.',
-    version: '1.0.0',
-    endpoints: {
-      exercises: '/api/exercises',
-      routines: '/api/routines',
-      logs: '/api/logs',
-    },
-  });
-});
-
-/**
- * Global fallback error boundary.
- * Prevents application shell errors from crashing the Node.js server.
- */
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({
-    error: 'Ocurrió un error interno en el servidor.',
-    message: err.message,
-  });
-});
 
 // Initialize database data-layer, then launch the Express listener
 initializeDatabase().then(() => {
