@@ -61,6 +61,7 @@ La API cuenta con los siguientes puntos de acceso:
 | **POST**| `/api/routines` | Crea una nueva rutina (con validación de métricas). |
 | **GET** | `/api/logs` | Obtiene el historial completo de entrenamientos realizados. |
 | **POST**| `/api/logs` | Registra una sesión de entrenamiento completada. |
+| **GET** | `/api/logs/stats` | Obtiene estadísticas acumuladas de volumen (pesos) y cardio (distancia y duración). |
 
 ---
 
@@ -191,6 +192,31 @@ Obtén todas las sesiones que has completado para graficar progresiones:
 * **Curl**:
   ```bash
   curl http://localhost:3000/api/logs
+  ```
+
+### 5. Consultar Estadísticas Acumuladas
+Obtén un resumen de tu carga de trabajo total acumulada (volumen total levantado para fuerza y kilómetros/duración acumulados para cardio):
+* **PowerShell**:
+  ```powershell
+  Invoke-RestMethod -Uri "http://localhost:3000/api/logs/stats" | ConvertTo-Json -Depth 5
+  ```
+* **Curl**:
+  ```bash
+  curl http://localhost:3000/api/logs/stats
+  ```
+
+* **Ejemplo de respuesta**:
+  ```json
+  {
+    "totalWorkoutSessions": 2,
+    "hypertrophy": {
+      "totalVolumeLiftedKg": 5040
+    },
+    "endurance": {
+      "totalDistanceKm": 9.3,
+      "totalDurationMinutes": 48
+    }
+  }
   ```
 
 ---
