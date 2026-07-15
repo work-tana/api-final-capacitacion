@@ -11,7 +11,7 @@ export const HypertrophyRoutineMetricSchema = z.object({
   targetReps: z.number().int().positive('Las repeticiones objetivo deben ser un entero positivo'),
   targetWeightKg: z.number().positive('El peso objetivo debe ser positivo').optional(),
   targetRestSeconds: z.number().int().positive('El tiempo de descanso debe ser un entero positivo').optional(),
-});
+}).strict();
 
 /**
  * Validator for endurance routines.
@@ -22,7 +22,7 @@ export const EnduranceRoutineMetricSchema = z.object({
   targetDurationMinutes: z.number().positive('La duración objetivo debe ser un número positivo').optional(),
   targetDistanceKm: z.number().positive('La distancia objetivo debe ser un número positivo').optional(),
   targetIntensity: z.string().optional(),
-});
+}).strict();
 
 /**
  * Validator for individual sets within a hypertrophy log.
@@ -31,7 +31,7 @@ export const EnduranceRoutineMetricSchema = z.object({
 export const HypertrophyLogSetSchema = z.object({
   reps: z.number().int().positive('Las repeticiones deben ser un entero positivo'),
   weightKg: z.number().nonnegative('El peso debe ser un número mayor o igual a cero (0 para peso corporal)'),
-});
+}).strict();
 
 /**
  * Validator for a complete hypertrophy exercise log.
@@ -41,7 +41,7 @@ export const HypertrophyLogMetricSchema = z.object({
   exerciseId: z.string().min(1, 'El ID de ejercicio es requerido'),
   sets: z.array(HypertrophyLogSetSchema).min(1, 'Se requiere registrar al menos una serie'),
   restSeconds: z.number().int().positive('El tiempo de descanso real debe ser un entero positivo').optional(),
-});
+}).strict();
 
 /**
  * Validator for an endurance exercise log.
@@ -53,7 +53,7 @@ export const EnduranceLogMetricSchema = z.object({
   distanceKm: z.number().positive('La distancia debe ser un número positivo').optional(),
   averageHeartRate: z.number().int().positive('La frecuencia cardíaca promedio debe ser un entero positivo').optional(),
   intensityRPE: z.number().int().min(1, 'La escala RPE mínima es 1').max(10, 'La escala RPE máxima es 10').optional(),
-});
+}).strict();
 
 /**
  * Schema for creating a Routine template.

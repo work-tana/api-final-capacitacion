@@ -45,6 +45,16 @@ npm run build
 npm start
 ```
 
+### Ejecutar Pruebas (Tests)
+Hemos configurado **Vitest** y **Supertest** para pruebas unitarias y de integración. Para correr todos los tests (con base de datos en memoria simulada):
+```bash
+# Correr tests una sola vez
+npm run test
+
+# Correr en modo interactivo (watch mode)
+npx vitest
+```
+
 *Nota: Al iniciar el servidor por primera vez, si el archivo `src/data/db.json` no existe, la aplicación se autocurará creándolo e inyectándole ejercicios semilla (como Press de Banca y Carrera).*
 
 ---
