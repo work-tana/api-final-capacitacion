@@ -22,7 +22,7 @@ No requiere de motores de bases de datos externos; persiste la información de m
 ## 🚀 Requisitos e Instalación
 
 ### Prerrequisitos
-* Node.js v18 o superior instalado.
+* Node.js v24 o superior instalado.
 * NPM (incluido por defecto con Node.js).
 
 ### Instalación de dependencias

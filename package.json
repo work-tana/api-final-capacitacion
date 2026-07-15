@@ -2,6 +2,9 @@
   "name": "api-final-capacitacion",
   "version": "1.0.0",
   "description": "Simple sports training API (Hypertrophy and Endurance) using Express, TypeScript, and local JSON storage.",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",

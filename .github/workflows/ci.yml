@@ -15,11 +15,11 @@ jobs:
       - name: Checkout del Repositorio
         uses: actions/checkout@v4
 
-      # Step 2: Instala el entorno de Node.js v22 habilitando el caché de npm para acelerar ejecuciones futuras
+      # Step 2: Instala el entorno de Node.js v24 habilitando el caché de npm para acelerar ejecuciones futuras
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: 'npm'
 
       # Step 3: Instala dependencias de manera limpia e idéntica a package-lock.json
